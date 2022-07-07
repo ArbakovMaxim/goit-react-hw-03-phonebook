@@ -6,6 +6,8 @@ import { FormName } from './components/Form/Form';
 import { Section } from 'ui/Section/Section';
 import { Filter } from 'components/Filter/Filter';
 
+const LS_key = 'contacts';
+
 export class App extends Component {
   state = {
     contacts: [
@@ -16,6 +18,22 @@ export class App extends Component {
     ],
     filter: '',
   };
+
+  componentDidMount() {
+    const localContacts = JSON.parse(localStorage.getItem(LS_key));
+    if (localContacts !== null) {
+      this.setState({
+        contacts: localContacts,
+      });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    const newState = JSON.stringify(this.state.contacts);
+    if (prevState.contact !== this.state.contacts) {
+      localStorage.setItem('contacts', newState);
+    }
+  }
 
   addContact = (name, number) => {
     let existsName = false;
